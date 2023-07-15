@@ -1,41 +1,47 @@
-// import * as admin from "firebase-admin";
-
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 import axios from "axios";
 
-var admin = require("firebase-admin");
-var serviceAccount = require("../../serviceAccountKey.json");
+admin.initializeApp();
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://gas-monitor-6692b-default-rtdb.firebaseio.com",
-});
+exports.sendNotification = functions.https.onRequest(async (req, res) => {
+  // const { token, title, body } = req.body;
 
-// Function to make API request and insert response into Firebase
-async function fetchDataAndInsertToFirebase() {
   try {
-    const response = await axios.get("https://sgp1.blynk.cloud/external/api/get?token=9PWWYxhkSuCnr4OD3VoKrfCPx0WsC4O7&v1"); // Replace with your API endpoint
+    // Fetch data from the other API
+    const response = await axios.get("https://sgp1.blynk.cloud/external/api/get?token=9PWWYxhkSuCnr4OD3VoKrfCPx0WsC4O7&v1");
+    const data = response.data;
+    const token = 'fmEEUVhXSkm40Cnn2dAdvA:APA91bGdOAlmb979bxqM3JAoh9pgK74-D9tuJoPfkUT7DcxrgXIDzvSjS7NXlma3tMc2k9kVdemgrqI6urqyw8oxAxEvE5j9LkQT7SmHIGPWMIA_7dbU76NlFDyxGQ7ZfCONQyShFso_';
+    const topic = 'nama_topik';
 
-    const data = response.data; // Assuming the API response is in JSON format
+    // Subs
+    admin.messaging().subscribeToTopic(token, topic)
+      .then(() => {
+        console.log('Token perangkat berhasil didaftarkan ke topik:', topic);
+      })
+      .catch((error) => {
+        console.log('Kesalahan saat mendaftarkan token perangkat ke topik:', error);
+      });
 
-    // Reference to Firebase Realtime Database
-    const db = admin.database();
+    // Evaluate condition based on data from the other API
+    if (data >= 0) {
+      const message: admin.messaging.Message = {
+        notification: {
+          title: "Periksa Gas Anda",
+          body: `Nilai kebocoran: ${data}`,
+        },
+        token: token,
+      };
 
-    // Insert data into Firebase Realtime Database
-    await db.ref("path/to/insert").set(data); // Replace with the desired path in your database
-    console.log("Data inserted into Firebase successfully");
-  } catch (error: any) {
-    console.error("Error:", error.message);
+      const fcmResponse = await admin.messaging().send(message);
+      console.log("Notification sent successfully:", fcmResponse);
+      res.status(200).send("Notification sent successfully");
+    } else {
+      console.log("Condition not met, skipping notification");
+      res.status(200).send("Condition not met, skipping notification");
+    }
+  } catch (error) {
+    console.error("Error sending notification:", error);
+    res.status(500).send("Error sending notification");
   }
-}
-
-async function fetchContinuously() {
-  while (true) {
-    await fetchDataAndInsertToFirebase();
-
-    // Delay between API requests (e.g., 5 seconds)
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-}
-
-// Start fetching data continuously
-fetchContinuously();
+});
