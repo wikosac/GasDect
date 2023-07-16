@@ -11,17 +11,7 @@ exports.sendNotification = functions.https.onRequest(async (req, res) => {
     // Fetch data from the other API
     const response = await axios.get("https://sgp1.blynk.cloud/external/api/get?token=9PWWYxhkSuCnr4OD3VoKrfCPx0WsC4O7&v1");
     const data = response.data;
-    const token = 'fmEEUVhXSkm40Cnn2dAdvA:APA91bGdOAlmb979bxqM3JAoh9pgK74-D9tuJoPfkUT7DcxrgXIDzvSjS7NXlma3tMc2k9kVdemgrqI6urqyw8oxAxEvE5j9LkQT7SmHIGPWMIA_7dbU76NlFDyxGQ7ZfCONQyShFso_';
-    // const topic = 'api_response_value';
-
-    // Subs
-    // admin.messaging().subscribeToTopic(token, topic)
-    //   .then(() => {
-    //     console.log('Token perangkat berhasil didaftarkan ke topik:', topic);
-    //   })
-    //   .catch((error) => {
-    //     console.log('Kesalahan saat mendaftarkan token perangkat ke topik:', error);
-    //   });
+    const token = "fmEEUVhXSkm40Cnn2dAdvA:APA91bGdOAlmb979bxqM3JAoh9pgK74-D9tuJoPfkUT7DcxrgXIDzvSjS7NXlma3tMc2k9kVdemgrqI6urqyw8oxAxEvE5j9LkQT7SmHIGPWMIA_7dbU76NlFDyxGQ7ZfCONQyShFso_";
 
     // Evaluate condition based on data from the other API
     if (data >= 400) {
