@@ -10,5 +10,10 @@ async function sendNotification() {
 }
 
 // Call the function at the desired interval
-sendNotification();
-setInterval(sendNotification, 10000); // Every 60 seconds
+
+function start() {
+  sendNotification();
+  setInterval(sendNotification, 5000); // Every 60 seconds
+}
+
+start();
