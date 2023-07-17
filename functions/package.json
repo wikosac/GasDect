@@ -7,7 +7,7 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "send-notif": "node src/notificationScheduler.js",
+    "send-notif": "ts-node notificationScheduler.js",
     "logs": "firebase functions:log"
   },
   "engines": {
