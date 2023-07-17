@@ -15,7 +15,9 @@ function run() {
 
 async function sendNotification() {
   try {
+    //live cloud functions
     // await axios.get("https://us-central1-gas-monitor-6692b.cloudfunctions.net/sendNotification");
+    //local test
     await axios.get("http://127.0.0.1:5001/gas-monitor-6692b/us-central1/sendNotification");
   } catch (error: any) {
     console.error("Error sending notification:", error.message);
