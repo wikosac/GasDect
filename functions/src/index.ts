@@ -25,9 +25,9 @@ exports.sendNotification = functions.https.onRequest(async (req, res) => {
 
       await admin.messaging().send(message);
       
-      res.status(200).send("Notification sent successfully");
+      res.status(200).send("Notification sent");
     } else {
-      res.status(200).send("Condition not met, skipping notification");
+      res.status(200).send("Condition not met");
     }
   } catch (error) {
     res.status(500).send("Error sending notification");

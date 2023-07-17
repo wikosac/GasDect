@@ -3,10 +3,10 @@ const axios = require("axios");
 setInterval(run, 5000); // Every 5 seconds
 
 // Call the function at the desired interval
-function run() {
-  const response = axios.get("https://sgp1.blynk.cloud/external/api/get?token=9PWWYxhkSuCnr4OD3VoKrfCPx0WsC4O7&v1");
+async function run() {
+  const response = await axios.get("https://sgp1.blynk.cloud/external/api/get?token=9PWWYxhkSuCnr4OD3VoKrfCPx0WsC4O7&v1");
   if (response.data >= 400) {
-    sendNotification();
+    await sendNotification();
     console.log("Notification sent successfully");
   } else {
     console.log("Condition not met, skipping notification");
